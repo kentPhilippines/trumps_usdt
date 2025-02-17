@@ -2,14 +2,14 @@
     "name": "Trumps Token",
     "symbol": "TRUMPS",
     "description": "Trumps 代币",
-    "image": "https://www.trumps.cfd/Trumps.jpg",
+    "image": "https://raw.githubusercontent.com/kentPhilippines/trumps_usdt/refs/heads/main/trumpsFile/Trumps.jpg",
     "external_url": "",
     "attributes": [],
     "properties": {
         "files": [
             {
-                "uri": "https://www.trumps.cfd/Trumps.jpg",
-                "type": "image/jpg"
+                "uri": "https://raw.githubusercontent.com/kentPhilippines/trumps_usdt/refs/heads/main/trumpsFile/Trumps.jpg",
+                "type": "image/jpeg"
             }
         ],
         "category": "image",
@@ -20,4 +20,4 @@
             }
         ]
     }
-}
+} 
