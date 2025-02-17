@@ -1,0 +1,26 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+    <!-- 背景 -->
+    <rect width="32" height="32" rx="6" fill="#6366f1"/>
+    
+    <!-- 特朗普简化轮廓 -->
+    <path d="M8 10 
+             C8 10, 12 6, 16 6
+             C20 6, 24 10, 24 10
+             L24 8 L8 8 Z" 
+          fill="#FFD700"/>
+    
+    <!-- 脸部轮廓 -->
+    <rect x="10" y="10" width="12" height="16" rx="2" fill="white"/>
+    
+    <!-- 眼睛 -->
+    <rect x="12" y="14" width="3" height="1.5" rx="1" fill="#1B1B1B"/>
+    <rect x="17" y="14" width="3" height="1.5" rx="1" fill="#1B1B1B"/>
+    
+    <!-- 嘴巴 -->
+    <path d="M12 20 
+             C12 20, 14 22, 16 22
+             C18 22, 20 20, 20 20" 
+          fill="none" 
+          stroke="#1B1B1B" 
+          stroke-width="1.5"/>
+</svg> 

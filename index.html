@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRUMPP - 以太坊创新代币</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="assets/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <style>
+      @import "base.css";
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header class="fixed w-full z-50 bg-dark-900/80 backdrop-blur">
+            <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="logo-placeholder">TP</div>
+                    <span class="ml-2 text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">TRUMPP</span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#" class="nav-link">{{ t.nav.home }}</a>
+                    <a href="#" class="nav-link">{{ t.nav.project }}</a>
+                    <a href="#" class="nav-link">{{ t.nav.token }}</a>
+                    <a href="#" class="nav-link">{{ t.nav.roadmap }}</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button @click="toggleLanguage" class="btn-language">
+                        {{ currentLang === 'zh' ? 'ENGLISH' : '中文' }}
+                    </button>
+                    <button class="btn-primary" @click="scrollToPresale">{{ t.hero.presale }}</button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero min-h-screen flex items-center relative overflow-hidden">
+                <div class="container mx-auto px-4 py-20 relative z-10">
+                    <div class="countdown-container mb-12">
+                        <h3 class="countdown-title">{{ t.countdown.title }}</h3>
+                        <div class="flex justify-center gap-6">
+                            <div class="countdown-box">
+                                <div class="number">{{ String(countdown.days).padStart(2, '0') }}</div>
+                                <div class="label">{{ t.countdown.days }}</div>
+                            </div>
+                            <div class="countdown-box">
+                                <div class="number">{{ String(countdown.hours).padStart(2, '0') }}</div>
+                                <div class="label">{{ t.countdown.hours }}</div>
+                            </div>
+                            <div class="countdown-box">
+                                <div class="number">{{ String(countdown.minutes).padStart(2, '0') }}</div>
+                                <div class="label">{{ t.countdown.minutes }}</div>
+                            </div>
+                            <div class="countdown-box">
+                                <div class="number">{{ String(countdown.seconds).padStart(2, '0') }}</div>
+                                <div class="label">{{ t.countdown.seconds }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+                                {{ t.hero.title }}
+                            </h1>
+                            <p class="text-xl mb-8 text-gray-300">
+                                {{ t.hero.description }}
+                            </p>
+                            <div class="flex space-x-4">
+                                <button class="btn-primary-lg" @click="scrollToClaim">{{ t.hero.airdrop }}</button>
+                                <button class="btn-secondary-lg" @click="scrollToPresale">{{ t.hero.presale }}</button>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="trump-logo-container">
+                                <div class="eth-symbol">
+                                    <div class="eth-diamond"></div>
+                                </div>
+                                <div class="trump-silhouette">
+                                    <div class="hair"></div>
+                                    <div class="face">
+                                        <div class="eyebrow"></div>
+                                        <div class="eye"></div>
+                                        <div class="mouth"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 在 Hero Section 后添加 -->
+            <section class="py-20 bg-dark-800">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                        <span class="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+                            {{ t.airdrop.title }}
+                        </span>
+                    </h2>
+                    
+                    <!-- 空投规则卡片 -->
+                    <div class="airdrop-rules-container">
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <!-- 基础空投 -->
+                            <div class="airdrop-rule-card">
+                                <div class="card-header">
+                                    <i class="fas fa-gift text-4xl mb-4"></i>
+                                    <h3 class="text-xl font-bold mb-2">{{ t.airdrop.basic.title }}</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p class="text-gray-400 mb-4">{{ t.airdrop.basic.description }}</p>
+                                    <div class="amount">
+                                        <span class="number">2,000</span>
+                                        <span class="token">TRUMPP</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 邀请奖励 -->
+                            <div class="airdrop-rule-card featured">
+                                <div class="card-header">
+                                    <i class="fas fa-users text-4xl mb-4"></i>
+                                    <h3 class="text-xl font-bold mb-2">{{ t.airdrop.invite.title }}</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p class="text-gray-400 mb-4">{{ t.airdrop.invite.description }}</p>
+                                    <div class="amount">
+                                        <span class="number">2,000</span>
+                                        <span class="token">TRUMPP / {{ t.airdrop.invite.person }}</span>
+                                    </div>
+                                    <div class="limit mt-2">
+                                        <span>{{ t.airdrop.invite.limit }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 最高奖励 -->
+                            <div class="airdrop-rule-card">
+                                <div class="card-header">
+                                    <i class="fas fa-trophy text-4xl mb-4"></i>
+                                    <h3 class="text-xl font-bold mb-2">{{ t.airdrop.max.title }}</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p class="text-gray-400 mb-4">{{ t.airdrop.max.description }}</p>
+                                    <div class="amount">
+                                        <span class="number">80,000</span>
+                                        <span class="token">TRUMPP</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 参与步骤 -->
+                        <div class="steps-container mt-16">
+                            <h3 class="text-2xl font-bold text-center mb-8">{{ t.airdrop.steps.title }}</h3>
+                            <div class="grid md:grid-cols-4 gap-6">
+                                <div class="step-item">
+                                    <div class="step-number">1</div>
+                                    <p>{{ t.airdrop.steps.step1 }}</p>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">2</div>
+                                    <p>{{ t.airdrop.steps.step2 }}</p>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">3</div>
+                                    <p>{{ t.airdrop.steps.step3 }}</p>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-number">4</div>
+                                    <p>{{ t.airdrop.steps.step4 }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 在 steps-container 后添加 -->
+                        <div id="claim-airdrop" class="airdrop-form-container mt-16">
+                            <div class="max-w-2xl mx-auto">
+                                <div class="airdrop-input-box">
+                                    <div class="input-header mb-6">
+                                        <h3 class="text-xl font-bold text-center">{{ t.airdrop.form.title }}</h3>
+                                        <p class="text-gray-400 text-center mt-2">{{ t.airdrop.form.description }}</p>
+                                    </div>
+                                    <div class="input-group">
+                                        <input 
+                                            type="text" 
+                                            v-model="airdropAddress" 
+                                            :placeholder="t.airdrop.form.placeholder"
+                                            class="eth-address-input"
+                                        >
+                                        <button @click="claimAirdrop" class="claim-btn">
+                                            {{ t.airdrop.form.button }}
+                                        </button>
+                                    </div>
+                                    <div class="referral-box mt-6" v-if="referralLink">
+                                        <p class="text-sm text-gray-400 mb-2">{{ t.airdrop.form.referralTitle }}</p>
+                                        <div class="referral-link-group">
+                                            <input 
+                                                type="text" 
+                                                v-model="referralLink" 
+                                                readonly 
+                                                class="referral-input"
+                                            >
+                                            <button @click="copyReferralLink" class="copy-btn">
+                                                {{ t.airdrop.form.copy }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Token Info -->
+            <section class="py-20 bg-dark-800">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">{{ t.token.title }}</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="stat-card">
+                            <h3>{{ t.token.total }}</h3>
+                            <p>1,000,000,000</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>{{ t.token.airdrop }}</h3>
+                            <p>100,000,000</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>{{ t.token.community }}</h3>
+                            <p>200,000,000</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 在Token Info section后，智能合约section前添加 -->
+            <section class="py-20 bg-dark-800">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                        <span class="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+                            {{ t.howToGet.title }}
+                        </span>
+                    </h2>
+                    
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <div class="info-text">
+                                <p class="text-lg text-gray-300 mb-4">{{ t.howToGet.totalSupply }}</p>
+                                <p class="text-lg text-gray-300 mb-4">{{ t.howToGet.distribution }}</p>
+                            </div>
+                            <div class="info-text">
+                                <p class="text-lg text-gray-300">{{ t.howToGet.afterPresale }}</p>
+                            </div>
+                            <div class="info-text">
+                                <p class="text-lg text-gray-300">{{ t.howToGet.trading }}</p>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img src="assets/trump-logo.svg" alt="TRUMPP" class="w-full max-w-lg mx-auto trump-image">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Token Info -->
+            <section class="py-20 bg-dark-800">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">{{ t.token.title }}</h2>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="stat-card">
+                            <h3>{{ t.token.total }}</h3>
+                            <p>1,000,000,000</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>{{ t.token.airdrop }}</h3>
+                            <p>100,000,000</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>{{ t.token.community }}</h3>
+                            <p>200,000,000</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 在 Token Info section 后添加 -->
+            <section id="presale-contract" class="py-20">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                        <span class="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+                            {{ t.contract.title }}
+                        </span>
+                    </h2>
+                    <div class="contract-info-container">
+                        <div class="contract-info-grid">
+                            <div class="contract-info-item">
+                                <div class="label">{{ t.contract.symbol }}</div>
+                                <div class="value">TRUMPP</div>
+                            </div>
+                            <div class="contract-info-item">
+                                <div class="label">{{ t.contract.address }}</div>
+                                <div class="value address">
+                                    <span>0x29c2a3cea899ea78ffc416674cb9ce57dc03baac</span>
+                                    <button @click="copyAddress" class="copy-btn">
+                                        <span>{{ t.contract.copy }}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="contract-info-item">
+                                <div class="label">{{ t.contract.decimals }}</div>
+                                <div class="value">18</div>
+                            </div>
+                            <div class="contract-info-item">
+                                <div class="label">{{ t.contract.supply }}</div>
+                                <div class="value">1,000,000,000</div>
+                            </div>
+                            <div class="contract-info-item">
+                                <div class="label">{{ t.contract.blockchain }}</div>
+                                <div class="value">Ethereum</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Roadmap Section -->
+            <section class="py-20 bg-dark-800">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">
+                        <span class="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+                            {{ t.roadmap.title }}
+                        </span>
+                    </h2>
+                    
+                    <div class="roadmap-container">
+                        <!-- Phase 1 -->
+                        <div class="roadmap-item">
+                            <div class="time-badge">2025 Q1</div>
+                            <div class="roadmap-content">
+                                <h3 class="phase-title">{{ t.roadmap.phase1.title }}</h3>
+                                <ul class="milestone-list">
+                                    <li class="completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        {{ t.roadmap.phase1.item1 }}
+                                    </li>
+                                    <li class="completed">
+                                        <i class="fas fa-check-circle"></i>
+                                        {{ t.roadmap.phase1.item2 }}
+                                    </li>
+                                    <li class="in-progress">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        {{ t.roadmap.phase1.item3 }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2 -->
+                        <div class="roadmap-item">
+                            <div class="time-badge">2025 Q2</div>
+                            <div class="roadmap-content">
+                                <h3 class="phase-title">{{ t.roadmap.phase2.title }}</h3>
+                                <ul class="milestone-list">
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase2.item1 }}
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase2.item2 }}
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase2.item3 }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3 -->
+                        <div class="roadmap-item">
+                            <div class="time-badge">2025 Q3</div>
+                            <div class="roadmap-content">
+                                <h3 class="phase-title">{{ t.roadmap.phase3.title }}</h3>
+                                <ul class="milestone-list">
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase3.item1 }}
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase3.item2 }}
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase3.item3 }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Phase 4 -->
+                        <div class="roadmap-item">
+                            <div class="time-badge">2025 Q4</div>
+                            <div class="roadmap-content">
+                                <h3 class="phase-title">{{ t.roadmap.phase4.title }}</h3>
+                                <ul class="milestone-list">
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase4.item1 }}
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase4.item2 }}
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-circle"></i>
+                                        {{ t.roadmap.phase4.item3 }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Partners -->
+            <section class="py-20">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">{{ t.partners.title }}</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                        <a href="https://solana.com" target="_blank" class="partner-logo-placeholder">SOLANA</a>
+                        <a href="https://www.binance.com" target="_blank" class="partner-logo-placeholder">BINANCE</a>
+                        <a href="https://www.gate.io" target="_blank" class="partner-logo-placeholder">GATE.IO</a>
+                        <a href="https://www.bitget.com" target="_blank" class="partner-logo-placeholder">BITGET</a>
+                        <a href="https://phantom.app" target="_blank" class="partner-logo-placeholder">PHANTOM</a>
+                        <a href="https://www.tokenpocket.pro" target="_blank" class="partner-logo-placeholder">TOKEN POCKET</a>
+                        <a href="https://www.jinse.com" target="_blank" class="partner-logo-placeholder">金色财经</a>
+                        <a href="https://uniswap.org" target="_blank" class="partner-logo-placeholder">UNISWAP</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-dark-900 py-20">
+            <div class="container mx-auto px-4">
+                <!-- 主要信息 -->
+                <div class="grid md:grid-cols-4 gap-12 mb-12">
+                    <!-- 项目介绍 -->
+                    <div class="space-y-4">
+                        <div class="flex items-center mb-6">
+                            <div class="logo-placeholder">TP</div>
+                            <span class="ml-2 text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">TRUMPP</span>
+                        </div>
+                        <p class="text-gray-400">
+                            {{ t.footer.description }}
+                        </p>
+                        <div class="flex space-x-4">
+                            <a href="#" class="social-link">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-telegram"></i>
+                            </a>
+                            <a href="#" class="social-link">
+                                <i class="fab fa-discord"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- 快速链接 -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-6">{{ t.footer.quickLinks }}</h3>
+                        <ul class="space-y-3">
+                            <li><a href="#" class="footer-link">{{ t.footer.whitepaper }}</a></li>
+                            <li><a href="#" class="footer-link">{{ t.footer.audit }}</a></li>
+                            <li><a href="#" class="footer-link">{{ t.footer.tokenomics }}</a></li>
+                            <li><a href="#" class="footer-link">{{ t.footer.roadmap }}</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 生态系统 -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-6">{{ t.footer.ecosystem }}</h3>
+                        <ul class="space-y-3">
+                            <li><a href="https://uniswap.org" target="_blank" class="footer-link">Uniswap</a></li>
+                            <li><a href="https://ethereum.org" target="_blank" class="footer-link">Ethereum</a></li>
+                            <li><a href="https://solana.com" target="_blank" class="footer-link">Solana</a></li>
+                            <li><a href="https://www.binance.com" target="_blank" class="footer-link">Binance</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 联系我们 -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-6">{{ t.footer.contact }}</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-center">
+                                <span class="text-gray-400">Email:</span>
+                                <a href="mailto:contact@trumpp.com" class="ml-2 footer-link">contact@trumpp.com</a>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="text-gray-400">Telegram:</span>
+                                <a href="#" class="ml-2 footer-link">@TRUMPP_Official</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 友情链接 -->
+                <div class="border-t border-gray-800 pt-8 mt-12">
+                    <h3 class="text-lg font-semibold mb-6">{{ t.footer.friendlyLinks }}</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                        <a href="https://coinmarketcap.com" target="_blank" class="footer-link">CoinMarketCap</a>
+                        <a href="https://www.coingecko.com" target="_blank" class="footer-link">CoinGecko</a>
+                        <a href="https://www.dextools.io" target="_blank" class="footer-link">DexTools</a>
+                        <a href="https://etherscan.io" target="_blank" class="footer-link">Etherscan</a>
+                        <a href="https://dexscreener.com" target="_blank" class="footer-link">Dexscreener</a>
+                        <a href="https://www.certik.com" target="_blank" class="footer-link">CertiK</a>
+                    </div>
+                </div>
+
+                <!-- 版权信息 -->
+                <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+                    <p>© 2024 TRUMPP. {{ t.footer.rights }}</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    currentLang: 'zh',
+                    countdown: {
+                        days: 5,
+                        hours: 0,
+                        minutes: 0,
+                        seconds: 0
+                    },
+                    translations: {
+                        zh: {
+                            nav: {
+                                home: '首页',
+                                project: '项目',
+                                token: '代币',
+                                roadmap: '路线图'
+                            },
+                            hero: {
+                                title: 'Ethereum TRUMP',
+                                description: 'TRUMPP是以太坊上的特朗普币TRUMP，由Solana链TRUMP币官方映射分叉而来。',
+                                airdrop: '领取空投',
+                                presale: '参与预售'
+                            },
+                            token: {
+                                title: 'TRUMPP Token',
+                                total: '总量',
+                                airdrop: '空投奖励',
+                                community: '社区预售'
+                            },
+                            partners: {
+                                title: '投资机构'
+                            },
+                            countdown: {
+                                title: '空投倒计时',
+                                days: '天',
+                                hours: '时',
+                                minutes: '分',
+                                seconds: '秒'
+                            },
+                            contract: {
+                                title: '智能合约信息',
+                                symbol: '符号',
+                                address: '地址',
+                                decimals: '小数位数',
+                                supply: '总量',
+                                blockchain: '区块链',
+                                copy: '复制'
+                            },
+                            footer: {
+                                description: 'TRUMPP是以太坊上最具创新性的代币项目之一，致力于为用户提供安全、透明的区块链生态系统。',
+                                quickLinks: '快速链接',
+                                whitepaper: '白皮书',
+                                audit: '审计报告',
+                                tokenomics: '代币经济',
+                                roadmap: '路线图',
+                                ecosystem: '生态系统',
+                                contact: '联系我们',
+                                friendlyLinks: '友情链接',
+                                rights: '保留所有权利'
+                            },
+                            airdrop: {
+                                title: '空投规则',
+                                basic: {
+                                    title: '基础空投',
+                                    description: '连接钱包即可获得基础空投奖励'
+                                },
+                                invite: {
+                                    title: '邀请奖励',
+                                    description: '邀请好友参与可获得额外奖励',
+                                    person: '每人',
+                                    limit: '最多邀请 40 人'
+                                },
+                                max: {
+                                    title: '最高奖励',
+                                    description: '完成所有任务可获得最高奖励'
+                                },
+                                steps: {
+                                    title: '参与步骤',
+                                    step1: '连接以太坊钱包',
+                                    step2: '输入ETH接收地址',
+                                    step3: '邀请好友参与',
+                                    step4: '等待空投发放'
+                                },
+                                form: {
+                                    title: '领取空投',
+                                    description: '输入您的ETH钱包地址领取空投',
+                                    placeholder: '输入ETH地址 (0x...)',
+                                    button: '领取空投',
+                                    referralTitle: '您的邀请链接',
+                                    copy: '复制',
+                                    errorEmpty: '请输入ETH地址',
+                                    errorInvalid: '请输入有效的ETH地址',
+                                    copySuccess: '邀请链接已复制'
+                                }
+                            },
+                            roadmap: {
+                                title: '发展路线图',
+                                phase1: {
+                                    title: '第一阶段：项目启动',
+                                    item1: '完成智能合约开发和审计',
+                                    item2: '官网上线和社区建设',
+                                    item3: '启动空投和预售活动'
+                                },
+                                phase2: {
+                                    title: '第二阶段：市场扩张',
+                                    item1: '上线主流交易所',
+                                    item2: '启动全球营销活动',
+                                    item3: '建立战略合作伙伴关系'
+                                },
+                                phase3: {
+                                    title: '第三阶段：生态建设',
+                                    item1: '推出质押和流动性挖矿',
+                                    item2: '开发去中心化应用',
+                                    item3: '扩展跨链功能'
+                                },
+                                phase4: {
+                                    title: '第四阶段：全面发展',
+                                    item1: '推出治理系统',
+                                    item2: '建立DAO组织',
+                                    item3: '拓展更多应用场景'
+                                }
+                            },
+                            howToGet: {
+                                title: '怎样获得TRUMPP',
+                                totalSupply: 'TRUMPP总量为1,000,000,000枚，空投奖励100,000,000枚，社区预售200,000,000枚。',
+                                distribution: '100,000,000枚用于质押奖励，剩余用于交易所做市。',
+                                afterPresale: '预售完成后，TRUMPP将立即上线币安、Coinbase、火币等中心化交易所。现在可以通过参与TRUMPP空投、TRUMPP预售的方式获取TRUMPP代币。',
+                                trading: '预售和空投结束后可通过交易所购买TRUMPP。'
+                            }
+                        },
+                        en: {
+                            nav: {
+                                home: 'Home',
+                                project: 'Project',
+                                token: 'Token',
+                                roadmap: 'Roadmap'
+                            },
+                            hero: {
+                                title: 'Ethereum TRUMP',
+                                description: 'TRUMPP is the Trump token on Ethereum, forked and mapped from the official TRUMP token on Solana chain.',
+                                airdrop: 'Get Airdrop',
+                                presale: 'Join Presale'
+                            },
+                            token: {
+                                title: 'TRUMPP Token',
+                                total: 'Total Supply',
+                                airdrop: 'Airdrop Rewards',
+                                community: 'Community Presale'
+                            },
+                            partners: {
+                                title: 'Investment Institutions'
+                            },
+                            countdown: {
+                                title: 'Airdrop Countdown',
+                                days: 'Days',
+                                hours: 'Hours',
+                                minutes: 'Mins',
+                                seconds: 'Secs'
+                            },
+                            contract: {
+                                title: 'Smart Contract Information',
+                                symbol: 'Symbol',
+                                address: 'Address',
+                                decimals: 'Decimals',
+                                supply: 'Total Supply',
+                                blockchain: 'Blockchain',
+                                copy: 'Copy'
+                            },
+                            footer: {
+                                description: 'TRUMPP is one of the most innovative token projects on Ethereum, dedicated to providing users with a secure and transparent blockchain ecosystem.',
+                                quickLinks: 'Quick Links',
+                                whitepaper: 'Whitepaper',
+                                audit: 'Audit Report',
+                                tokenomics: 'Tokenomics',
+                                roadmap: 'Roadmap',
+                                ecosystem: 'Ecosystem',
+                                contact: 'Contact Us',
+                                friendlyLinks: 'Friendly Links',
+                                rights: 'All rights reserved'
+                            },
+                            airdrop: {
+                                title: 'Airdrop Rules',
+                                basic: {
+                                    title: 'Basic Airdrop',
+                                    description: 'Connect wallet to receive basic airdrop rewards'
+                                },
+                                invite: {
+                                    title: 'Invitation Rewards',
+                                    description: 'Get extra rewards by inviting friends',
+                                    person: 'per person',
+                                    limit: 'Max 40 invites'
+                                },
+                                max: {
+                                    title: 'Maximum Reward',
+                                    description: 'Complete all tasks to get maximum rewards'
+                                },
+                                steps: {
+                                    title: 'How to Participate',
+                                    step1: 'Connect ETH Wallet',
+                                    step2: 'Enter ETH Address',
+                                    step3: 'Invite Friends',
+                                    step4: 'Wait for Distribution'
+                                },
+                                form: {
+                                    title: 'Claim Airdrop',
+                                    description: 'Enter your ETH wallet address to claim airdrop',
+                                    placeholder: 'Enter ETH address (0x...)',
+                                    button: 'Claim Airdrop',
+                                    referralTitle: 'Your Referral Link',
+                                    copy: 'Copy',
+                                    errorEmpty: 'Please enter ETH address',
+                                    errorInvalid: 'Please enter a valid ETH address',
+                                    copySuccess: 'Referral link copied'
+                                }
+                            },
+                            roadmap: {
+                                title: 'Roadmap',
+                                phase1: {
+                                    title: 'Phase 1: Project Launch',
+                                    item1: 'Smart Contract Development & Audit',
+                                    item2: 'Website Launch & Community Building',
+                                    item3: 'Airdrop & Presale Launch'
+                                },
+                                phase2: {
+                                    title: 'Phase 2: Market Expansion',
+                                    item1: 'Major Exchange Listings',
+                                    item2: 'Global Marketing Campaign',
+                                    item3: 'Strategic Partnerships'
+                                },
+                                phase3: {
+                                    title: 'Phase 3: Ecosystem Building',
+                                    item1: 'Staking & Liquidity Mining',
+                                    item2: 'DApp Development',
+                                    item3: 'Cross-chain Integration'
+                                },
+                                phase4: {
+                                    title: 'Phase 4: Full Development',
+                                    item1: 'Governance System Launch',
+                                    item2: 'DAO Establishment',
+                                    item3: 'Use Case Expansion'
+                                }
+                            },
+                            howToGet: {
+                                title: 'How to Get TRUMPP',
+                                totalSupply: 'TRUMPP has a total supply of 1,000,000,000 tokens, with 100,000,000 for airdrop rewards and 200,000,000 for community presale.',
+                                distribution: '100,000,000 tokens are allocated for staking rewards, and the remainder for exchange market making.',
+                                afterPresale: 'After the presale, TRUMPP will be immediately listed on major exchanges like Binance, Coinbase, and Huobi. Currently, you can obtain TRUMPP tokens by participating in the airdrop and presale.',
+                                trading: 'After the presale and airdrop end, TRUMPP can be purchased through exchanges.'
+                            }
+                        }
+                    },
+                    airdropAddress: '',
+                    referralLink: '',
+                }
+            },
+            computed: {
+                t() {
+                    return this.translations[this.currentLang]
+                }
+            },
+            mounted() {
+                this.startCountdown();
+            },
+            methods: {
+                toggleLanguage() {
+                    this.currentLang = this.currentLang === 'zh' ? 'en' : 'zh'
+                },
+                startCountdown() {
+                    const endDate = new Date('2025-02-20').getTime();
+                    
+                    setInterval(() => {
+                        const now = new Date().getTime();
+                        const distance = endDate - now;
+                        
+                        this.countdown.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        this.countdown.hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        this.countdown.minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        this.countdown.seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    }, 1000);
+                },
+                copyAddress() {
+                    const address = document.querySelector('.value.address span').textContent;
+                    const tempInput = document.createElement('input');
+                    tempInput.value = address;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    alert('地址已复制到剪贴板');
+                },
+                async claimAirdrop() {
+                    if (!this.airdropAddress) {
+                        alert(this.t.airdrop.form.errorEmpty);
+                        return;
+                    }
+                    if (!this.isValidEthAddress(this.airdropAddress)) {
+                        alert(this.t.airdrop.form.errorInvalid);
+                        return;
+                    }
+                    // 这里添加领取空投的逻辑
+                    this.referralLink = `${window.location.origin}?ref=${this.airdropAddress}`;
+                },
+                copyReferralLink() {
+                    navigator.clipboard.writeText(this.referralLink).then(() => {
+                        alert(this.t.airdrop.form.copySuccess);
+                    });
+                },
+                isValidEthAddress(address) {
+                    return /^0x[a-fA-F0-9]{40}$/.test(address);
+                },
+                scrollToClaim() {
+                    const claimSection = document.getElementById('claim-airdrop');
+                    if (claimSection) {
+                        // 获取header的高度，用于偏移
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const yOffset = -headerHeight - 20; // 额外留出20px的空间
+                        const y = claimSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        
+                        window.scrollTo({
+                            top: y,
+                            behavior: 'smooth'
+                        });
+                        
+                        // 聚焦到输入框
+                        setTimeout(() => {
+                            const input = document.querySelector('.eth-address-input');
+                            if (input) {
+                                input.focus();
+                            }
+                        }, 800);
+                    }
+                },
+                scrollToPresale() {
+                    const presaleSection = document.getElementById('presale-contract');
+                    if (presaleSection) {
+                        // 获取header的高度，用于偏移
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const yOffset = -headerHeight - 20; // 额外留出20px的空间
+                        const y = presaleSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        
+                        window.scrollTo({
+                            top: y,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html> 

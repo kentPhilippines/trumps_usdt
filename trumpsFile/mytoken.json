@@ -1,0 +1,23 @@
+{
+    "name": "Trumps Token",
+    "symbol": "TRUMPS",
+    "description": "Trumps 代币",
+    "image": "https://www.trumps.cfd/Trumps.jpg",
+    "external_url": "",
+    "attributes": [],
+    "properties": {
+        "files": [
+            {
+                "uri": "https://www.trumps.cfd/Trumps.jpg",
+                "type": "image/jpg"
+            }
+        ],
+        "category": "image",
+        "creators": [
+            {
+                "address": "CMSxFCtFfNnxq4F5Tg4Wn1VjBb1WVw3R8sxndDhBFG9F",
+                "share": 100
+            }
+        ]
+    }
+}
